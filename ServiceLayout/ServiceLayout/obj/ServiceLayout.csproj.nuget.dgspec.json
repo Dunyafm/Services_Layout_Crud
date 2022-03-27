@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\FX706HCB\\Desktop\\Services-Layout\\ServiceLayout\\ServiceLayout\\ServiceLayout.csproj": {}
+    "C:\\Users\\FX706HCB\\Desktop\\Services_Layout_Crud\\ServiceLayout\\ServiceLayout\\ServiceLayout.csproj": {}
   },
   "projects": {
-    "C:\\Users\\FX706HCB\\Desktop\\Services-Layout\\ServiceLayout\\ServiceLayout\\ServiceLayout.csproj": {
+    "C:\\Users\\FX706HCB\\Desktop\\Services_Layout_Crud\\ServiceLayout\\ServiceLayout\\ServiceLayout.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\FX706HCB\\Desktop\\Services-Layout\\ServiceLayout\\ServiceLayout\\ServiceLayout.csproj",
+        "projectUniqueName": "C:\\Users\\FX706HCB\\Desktop\\Services_Layout_Crud\\ServiceLayout\\ServiceLayout\\ServiceLayout.csproj",
         "projectName": "ServiceLayout",
-        "projectPath": "C:\\Users\\FX706HCB\\Desktop\\Services-Layout\\ServiceLayout\\ServiceLayout\\ServiceLayout.csproj",
+        "projectPath": "C:\\Users\\FX706HCB\\Desktop\\Services_Layout_Crud\\ServiceLayout\\ServiceLayout\\ServiceLayout.csproj",
         "packagesPath": "C:\\Users\\FX706HCB\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\FX706HCB\\Desktop\\Services-Layout\\ServiceLayout\\ServiceLayout\\obj\\",
+        "outputPath": "C:\\Users\\FX706HCB\\Desktop\\Services_Layout_Crud\\ServiceLayout\\ServiceLayout\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages",
