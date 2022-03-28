@@ -9,7 +9,8 @@ using System.Threading.Tasks;
 
 namespace ServiceLayout.Areas.AdminArea.Controllers
 {
-    public class CategoryController
+    [Area("AdminArea")]
+    public class CategoryController : Controller
     {
         private readonly AppDbContext _context;
         public CategoryController(AppDbContext context)
@@ -55,23 +56,63 @@ namespace ServiceLayout.Areas.AdminArea.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        public IActionResult Edit(int id)
+        public async Task<IActionResult> Edit(int Id)
         {
-            return Json(new
-            {
-                action = "Edit",
-                Id = id
-            });
+            Category category = await _context.Categories.Where(m => !m.IsDeleted && m.Id == Id).FirstOrDefaultAsync();
+            if (category == null) return NotFound();
+
+
+            return View(category);
         }
-        public IActionResult Delete(int id)
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(int Id, Category category)
         {
-            return Json(new
+            if (!ModelState.IsValid)
             {
-                action = "Delete",
-                Id = id
-            });
+                return View();
+            }
+
+            if (Id != category.Id) return NotFound();
+
+            Category dbCategory = await _context.Categories.AsNoTracking().Where(m => !m.IsDeleted && m.Id == Id).FirstOrDefaultAsync();
+
+            if (dbCategory.Name.ToLower().Trim() == category.Name.ToLower().Trim())
+            {
+                return RedirectToAction(nameof(Index));
+            }
+
+            bool isExist = _context.Categories.Any(m => m.Name.ToLower().Trim() == category.Name.ToLower().Trim());
+            if (isExist)
+            {
+                ModelState.AddModelError("Name", "Bu category artiq movcuddur");
+                return View();
+            }
+
+            //dbCategory.Name = category.Name;
+            _context.Update(category);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Delete(int Id)
+        {
+            Category category = await _context.Categories.Where(m => m.Id == Id).FirstOrDefaultAsync();
+
+            if (category == null) return NotFound();
+
+            //category.IsDeleted = true;
+            _context.Categories.Remove(category);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
         }
     }
-
 }
+
+
+
 

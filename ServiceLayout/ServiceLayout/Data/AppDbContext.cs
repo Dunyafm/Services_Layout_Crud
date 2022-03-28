@@ -20,6 +20,7 @@ namespace ServiceLayout.Data
         public DbSet<Category> Categories { get; set; }
         public DbSet<Setting> Settings { get; set; }
         public DbSet<Blog> Blogs { get; set; }
+        public DbSet<Product> Products { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

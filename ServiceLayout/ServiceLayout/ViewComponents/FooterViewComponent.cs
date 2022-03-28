@@ -11,24 +11,21 @@ namespace ServiceLayout.ViewComponents
 {
     public class FooterViewComponent : ViewComponent
     {
-        private readonly LayoutService _layoutService;
-        public FooterViewComponent(LayoutService layoutService)
+        private readonly Services.ServiceLayout _layoutService;
+        public FooterViewComponent(Services.ServiceLayout layoutService)
         {
             _layoutService = layoutService;
         }
 
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            List<Category> categories = _layoutService.GetCategories();
-            
-            LayoutVM layoutVM = new LayoutVM
-            {
-                Categories = categories,
-                
-            };
-            return (await Task.FromResult(View(layoutVM)));
+            Dictionary<string, string> settings = _layoutService.GetSettings();
+
+            return await Task.FromResult(View(settings));
         }
     }
-
 }
+
+
+
 

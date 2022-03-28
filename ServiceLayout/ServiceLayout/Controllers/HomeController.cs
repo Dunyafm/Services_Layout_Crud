@@ -1,8 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using ServiceLayout.Data;
 using ServiceLayout.Models;
 using ServiceLayout.Services;
+using ServiceLayout.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -13,17 +16,122 @@ namespace ServiceLayout.Controllers
 {
     public class HomeController : Controller
     {
-        //private readonly AppDbContext _context;
-        //private readonly LayoutService _layoutService;
+        //private readonly ILogger<HomeController> _logger;
 
-        public async Task<IActionResult> Index()
+        //public HomeController(ILogger<HomeController> logger)
+        //{
+        //    _logger = logger;
+        //}
+
+        private readonly AppDbContext _context;
+        public HomeController(AppDbContext context)
         {
-            return View();
-
+            _context = context;
         }
 
 
 
+        public async Task<IActionResult> Index()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [AutoValidateAntiforgeryToken]
+        public async Task<IActionResult> AddBasket(int? id)
+        {
+            if (id is null) BadRequest();
+
+            Product dbProduct = await GetProductById(id);
+
+            if (dbProduct == null) return BadRequest();
+
+            List<BasketVM> basket = GetBasket();
+
+            UpdateBasket(basket, dbProduct);
+
+            Response.Cookies.Append("basket", JsonConvert.SerializeObject(basket));
+
+            return Json(new
+            {
+                data = dbProduct
+            });
+        }
+
+        private List<BasketVM> GetBasket()
+        {
+            List<BasketVM> basket;
+            if (Request.Cookies["basket"] != null)
+            {
+                basket = JsonConvert.DeserializeObject<List<BasketVM>>(Request.Cookies["basket"]);
+            }
+            else
+            {
+                basket = new List<BasketVM>();
+            }
+
+            return basket;
+        }
+
+        private void UpdateBasket(List<BasketVM> basket, Product product)
+        {
+            var existProduct = basket.Find(m => m.Id == product.Id);
+
+            if (existProduct == null)
+            {
+                basket.Add(new BasketVM
+                {
+                    Id = product.Id,
+                    Count = 1
+
+                });
+            }
+            else
+            {
+                existProduct.Count++;
+            }
+        }
+
+        private async Task<Product> GetProductById(int? id)
+        {
+            return await _context.Products.FindAsync(id);
+        }
+
+        public async Task<IActionResult> Basket()
+        {
+
+            List<BasketVM> basket;
+            if (Request.Cookies["basket"] != null)
+            {
+                basket = JsonConvert.DeserializeObject<List<BasketVM>>(Request.Cookies["basket"]);
+            }
+            else
+            {
+                basket = new List<BasketVM>();
+            }
+            List<BasketDetailVM> basketDetailsItem = new List<BasketDetailVM>();
+
+            foreach (BasketVM basketItem in basket)
+            {
+
+                Product product = await _context.Products.Include(m => m.Image).FirstOrDefaultAsync(m => m.Id == basketItem.Id);
+
+                BasketDetailVM basketDetail = new BasketDetailVM
+                {
+                    Id = basketItem.Id,
+                    Name = product.Name,
+                    Count = basketItem.Count,
+                    Price = product.Price * basketItem.Count
+                };
+
+                basketDetailsItem.Add(basketDetail);
+            }
+            return View(basketDetailsItem);
+            //return Json(JsonConvert.DeserializeObject<List<BasketVM>>(Request.Cookies["basket"]));
+        }
 
     }
+
+
 }
+

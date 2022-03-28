@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ServiceLayout.Areas.AdminArea.Controllers
 {
-    [Area("adminarea")]
+    [Area("AdminArea")]
     public class DashboardController : Controller
     {
         public IActionResult Index()

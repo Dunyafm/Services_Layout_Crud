@@ -7,18 +7,17 @@ using System.Threading.Tasks;
 
 namespace ServiceLayout.Services
 {
-    public class LayoutService
+    public class ServiceLayout
     {
         private readonly AppDbContext _context;
-        public LayoutService(AppDbContext context)
+        public ServiceLayout(AppDbContext context)
         {
             _context = context;
         }
 
         public Dictionary<string, string> GetSettings()
         {
-            Dictionary<string, string> settings = _context.Settings.AsEnumerable().ToDictionary(m => m.Key, m => m.Value);
-            return settings;
+            return _context.Settings.AsEnumerable().ToDictionary(m => m.Key, m => m.Value);
         }
 
         internal List<Category> GetCategories()
@@ -27,6 +26,7 @@ namespace ServiceLayout.Services
         }
     }
 }
+
 
 
 
